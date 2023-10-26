@@ -6,6 +6,7 @@
 	import { createTable, Subscribe, Render, createRender } from 'svelte-headless-table';
 	import { addSortBy, addColumnOrder, addPagination } from 'svelte-headless-table/plugins';
 	import { PUBLIC_GET_TICKERS } from '$env/static/public';
+	import { loadingTicker } from '$lib/stores';
 
 	type StockData = {
 		PCTRET_1: string;
