@@ -1,12 +1,13 @@
 import type { PageLoad } from './$types';
 import Papa from 'papaparse';
-import { PUBLIC_GET_ALL } from '$env/static/public';
+import { PUBLIC_GET_TICKER } from '$env/static/public';
 
 export const load: PageLoad = async ({ params }) => {
     try {
         let ticker = params.ticker;
         console.log("We trying to get data for ticker", ticker)
-        const response = await fetch(PUBLIC_GET_ALL);
+        let url = PUBLIC_GET_TICKER + ticker + ".csv";
+        const response = await fetch(url);
         // const data = await response.json();
         // console.log("Data", data)
         if (!response.ok) {
