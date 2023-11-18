@@ -28,18 +28,28 @@
 	};
 
 	const data = writable<StockData[]>([]);
+	const lastCsvUpdate = writable(new Date().toLocaleString());
 
 	onMount(() => {
 		const csvUrl = `${PUBLIC_GET_TICKERS}`;
 
-		Papa.parse(csvUrl, {
-			download: true,
-			header: true,
-			complete: function (results: any) {
-				data.set(results.data);
-				console.log($data);
-			}
-		});
+		const currentDate = new Date();
+		const laTime = new Date(currentDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+		const laHours = laTime.getHours();
+		const laMinutes = laTime.getMinutes();
+
+		if ($data.length === 0 || (laHours > 14 || (laHours === 14 && laMinutes >= 30)) && new Date($lastCsvUpdate).getTime() < laTime.setHours(14, 30)) {
+			Papa.parse(csvUrl, {
+				download: true,
+				header: true,
+				complete: function (results: any) {
+					data.set(results.data);
+					lastCsvUpdate.set(new Date().toLocaleString());
+					console.log($data);
+				}
+			});
+		}
+
 	});
 
 	const table = createTable(data, {
